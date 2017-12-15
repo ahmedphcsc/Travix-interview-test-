@@ -3,8 +3,9 @@ package com.travix.medusa.busyflights.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -14,7 +15,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-
 import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsRequest;
 import com.travix.medusa.busyflights.domain.busyflights.BusyFlightsResponse;
 import com.travix.medusa.busyflights.domain.crazyair.CrazyAirResponse;
@@ -39,30 +39,39 @@ public class BusyFlightsService {
 		bFRList.addAll(crazyAirToBusyFlights(crazyAirResLst));
 		bFRList.addAll(toughJetToBusyFlights(toughJetResLst));
 		
-		return sortByFair(bFRList);
+		return sortByFare(bFRList);
 	}
 	
-	public List<BusyFlightsResponse> sortByFair(List<BusyFlightsResponse> flights){
-		return new ArrayList<>();
+	
+	// This Method to sort the Response by Fare
+	private List<BusyFlightsResponse> sortByFare(List<BusyFlightsResponse> flights){
+		Collections.sort(flights, new Comparator<BusyFlightsResponse>() {
+		    @Override
+		    public int compare(BusyFlightsResponse f1, BusyFlightsResponse f2) {
+		        return f1.getFare().compareTo(f2.getFare());
+		    }
+		});
+		
+		return flights;
 	}
 	
 	public List<BusyFlightsResponse> crazyAirToBusyFlights(List<CrazyAirResponse> cList){
-		// this to convert respnse to HttpResponse response
+		// this to CrazyAirResponse List to BusyFlightsResponse List
 		return new ArrayList<>();
 	}
 
 	public List<BusyFlightsResponse> toughJetToBusyFlights(List<ToughJetResponse> tlist){
-		// this to convert respnse to HttpResponse response
+		// this to convert List ToughJetResponse to BusyFlightsResponse List
 		return new ArrayList<>();
 	}
 
 	public List<CrazyAirResponse> buildCrazyAirRes(HttpResponse response){
-		// this to convert respnse to HttpResponse response
+		// this to convert respnse to CrazyAirResponse List
 		return new ArrayList<>();
 	}
 
 	public List<ToughJetResponse> buildToughJetRes(HttpResponse response){
-		// this to convert respnse to HttpResponse response
+		// this to convert httprespnse to ToughJetResponse List
 		return new ArrayList<>();
 	}
 	
@@ -123,7 +132,5 @@ public class BusyFlightsService {
 		}
 		 return response;
     }
-	
-	
 	
 }
